@@ -1,6 +1,7 @@
 'use client';
 
 import * as z from 'zod';
+import axios from 'axios';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Category, Companion } from '@prisma/client';
 import { useForm } from 'react-hook-form';
@@ -27,6 +28,8 @@ import {
 import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
 import { Wand2 } from 'lucide-react';
+import { useToast } from '@/hooks/use-toast';
+import { useRouter } from 'next/navigation';
 
 interface CompanionFormProps {
   initialData: Companion | null;
@@ -58,6 +61,9 @@ export default function CompanionForm({
   initialData,
   categories
 }: CompanionFormProps) {
+  const router = useRouter();
+  const { toast } = useToast();
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: initialData || {
@@ -73,7 +79,33 @@ export default function CompanionForm({
   const isLoading = form.formState.isSubmitting;
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
-    console.log(values);
+    try {
+      if (initialData) {
+        // Update existing companion
+        await axios.patch(`/api/companion/${initialData.id}`, values);
+
+        toast({
+          description: 'Your companion has been updated successfully'
+        });
+      } else {
+        // Create new companion
+        await axios.post('/api/companion', values);
+
+        toast({
+          description: 'Your companion has been created successfully'
+        });
+      }
+
+      router.refresh();
+      router.push('/');
+    } catch (error) {
+      toast({
+        title: 'Error',
+        description: 'An error occurred while submitting the form',
+        variant: 'destructive'
+      });
+      console.error('Error submitting form', error);
+    }
   };
 
   return (
@@ -102,7 +134,7 @@ export default function CompanionForm({
                     onChange={field.onChange}
                   />
                 </FormControl>
-                <FormMessage>Image is required</FormMessage>
+                <FormMessage />
               </FormItem>
             )}
           />
