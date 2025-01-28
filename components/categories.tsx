@@ -39,7 +39,6 @@ const Categories = ({ data }: CategoriesProps) => {
     className?: string;
     onClick: () => void;
   }) => {
-    console.log(className);
     return (
       <button
         onClick={onClick}
