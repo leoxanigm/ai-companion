@@ -29,7 +29,7 @@ export async function PATCH(
     // TODO: check for subscription status
 
     const companion = await prismadb.companion.update({
-      where: { id: params.companionId },
+      where: { id: params.companionId, userId: user.id },
       data: {
         categoryId,
         userId: user.id,
