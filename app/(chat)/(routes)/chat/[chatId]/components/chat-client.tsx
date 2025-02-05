@@ -9,6 +9,7 @@ import ChatHeader from './chat-header';
 import ChatForm from './chat-form';
 import ChatMessages from './chat-messages';
 import { ChatMessageProps } from './chat-message';
+import { v4 as uuid } from 'uuid';
 
 interface ChatClientProps {
   companion: Companion & {
@@ -28,25 +29,39 @@ const ChatClient = ({ companion }: ChatClientProps) => {
   const { input, isLoading, handleInputChange, handleSubmit, setInput } =
     useCompletion({
       api: `/api/chat/${companion.id}`,
-      onFinish(prompt, completion) {
+      // onFinish(prompt, completion) {
+      //   console.log("prompt", prompt);
+      //   const systemMessage: ChatMessageProps = {
+      //     role: 'system',
+      //     content: completion
+      //   };
+
+      //   setMessages(current => [...current, systemMessage]);
+      //   setInput('');
+
+      //   router.refresh(); // Check if this is needed
+      // }
+      async onResponse(response) {
+        const content = await response.text();
         const systemMessage: ChatMessageProps = {
+          id: uuid(),
           role: 'system',
-          content: completion
+          content
         };
 
         setMessages(current => [...current, systemMessage]);
         setInput('');
-
-        // router.refresh(); // Check if this is needed
       }
     });
 
   const onSubmit = (e: FormEvent<HTMLFormElement>) => {
     const userMessage: ChatMessageProps = {
+      id: uuid(),
       role: 'user',
       content: input
     };
 
+    // Generate uuid to be used as temporary key
     setMessages(current => [...current, userMessage]);
     handleSubmit(e);
   };

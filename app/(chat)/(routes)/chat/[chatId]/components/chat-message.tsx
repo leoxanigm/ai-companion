@@ -11,6 +11,7 @@ import { Button } from '@/components/ui/button';
 import { Copy } from 'lucide-react';
 
 export interface ChatMessageProps {
+  id?: string;
   role: 'user' | 'system';
   content?: string;
   isLoading?: boolean;

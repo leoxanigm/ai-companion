@@ -78,7 +78,7 @@ export class MemoryManager {
     return result;
   }
 
-  private async readLatestHistory(companionKey: CompanionKey): Promise<string> {
+  public async readLatestHistory(companionKey: CompanionKey): Promise<string> {
     if (!companionKey || typeof companionKey.userId === 'undefined') {
       console.error('Companion key is incorrectly set!');
 

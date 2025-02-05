@@ -38,7 +38,12 @@ const ChatMessages = ({
         content={`Hello, I am ${companion.name}, ${companion.description}`}
       />
       {messages.map(message => (
-        <ChatMessage key={message.content} {...message} />
+        <ChatMessage
+          key={message.id}
+          role={message.role}
+          content={message.content}
+          src={companion.src}
+        />
       ))}
       {isLoading && <ChatMessage isLoading role='system' src={companion.src} />}
       <div ref={scrollRef}></div>
