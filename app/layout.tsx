@@ -5,6 +5,7 @@ import { ClerkProvider } from '@clerk/nextjs';
 import { ThemeProvider } from '@/components/theme-provider';
 import { cn } from '@/lib/utils';
 import './globals.css';
+import { ProModal } from '@/components/pro-modal';
 
 const geistSans = Geist({
   variable: '--font-geist-sans',
@@ -36,6 +37,7 @@ export default function RootLayout({
           )}>
           <ThemeProvider attribute='class' defaultTheme='system' enableSystem>
             {children}
+            <ProModal />
           </ThemeProvider>
         </body>
       </html>

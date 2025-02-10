@@ -7,7 +7,7 @@ import { stripe } from '@/lib/stripe';
 
 export async function POST(req: Request) {
   const body = await req.text();
-  const signature = (await headers()).get('Stripe-Signature') as string;
+  const signature = (await headers()).get('stripe-signature') as string;
 
   let event: Stripe.Event;
 
@@ -51,9 +51,9 @@ export async function POST(req: Request) {
       session.subscription as string
     );
 
-    if (!session?.metadata?.userId) {
-      return new NextResponse('User ID not found in metadata', { status: 400 });
-    }
+    // if (!session?.metadata?.userId) {
+    //   return new NextResponse('User ID not found in metadata', { status: 400 });
+    // }
 
     await prismadb.userSubscription.update({
       where: {
